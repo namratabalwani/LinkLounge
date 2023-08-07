@@ -18,22 +18,25 @@ export const register = async (req, res) => {
         
             const salt = await bcrypt.genSalt();
             const passwordHash = await bcrypt.hash(password, salt);
-
+            // password = passwordHash;
+            console.log("passwordHASHH::::",passwordHash);
+           
             const newUser = new User ({
                 firstName,
                 lastName,
                 email,
-                passwordHash,
-                friends,
+                password: passwordHash,
                 picturePath, 
+                friends,                
                 location ,
                 occupation,
                 viewedProfile : Math.floor(Math.random() * 1000),
                 impressions : Math.floor(Math.random() * 1000)
             });
-
+            console.log("newUser::::",newUser);
             const savedUSer = await newUser.save();
             res.status(201).json(savedUSer);
+            console.log("savedUSer::::",savedUSer);
         
     } catch ( err ) {
         res.status(500).json({
@@ -53,8 +56,8 @@ export const login = async (req, res) => {
 
         const user = await User.findOne({ email : email});
         if (!user) return res.status(400).json({ message : "User does not exist!"});
-
-        const isMatch = bcrypt.compare(password, user.password);
+        console.log(password, user);
+        const isMatch = await bcrypt.compare(password, user.password);
         if(!isMatch) return res.status(400).json({ message : "Invalid credentials!"});
 
         const token = jwt.sign({ id: user._id}, process.env.JWT_SECRET);

@@ -29,8 +29,7 @@ import FlexBetween from "../../components/FlexBetween";
 
 
 const Navbar = () => {
-    const [isMobileMenuToggled,
-        setMobileMenuToggled] = useState(false);
+    const [isMobileMenuToggled, setMobileMenuToggled ] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
@@ -107,7 +106,7 @@ const Navbar = () => {
                         </Select>
                     </FormControl>
                 </FlexBetween>) :
-            (<IconButton onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}>
+            (<IconButton onClick={() => setMobileMenuToggled(!isMobileMenuToggled)}>
                 <Menu></Menu>
             </IconButton>)}
 

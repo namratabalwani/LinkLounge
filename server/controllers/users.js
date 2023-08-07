@@ -1,12 +1,15 @@
 import User from "../models/User.js";
 
 /*READ */
-export const getUser = async (req, res) => {
+export const getUser = async (req, res, next) => {
     try {
+        
         const { id } = req.params;
+        console.log("SErver USERS", id );
         const user =   await User.findById(id);
 
         res.status(200).json({user});
+        next();
     } catch ( err ) {
         res.status(404).json({
             message : err.message
