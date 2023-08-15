@@ -26,6 +26,7 @@ const UserWidget = ({ userId, picturePath}) => {
     const main = pallete.neutral.main;
 
     console.log("userIS::",userId);
+    console.log("TOKEN : ", token);
     const getUser = async () => {
         console.log("Token", token);
         const response = await fetch(`http://localhost:3001/users/${userId}`,
