@@ -32,8 +32,6 @@ const LoginPage = () => {
             <Form></Form>
         </Box>
     </Box>
-    
-    // return <div>Login Page</div>;
 }
 
 export default LoginPage;

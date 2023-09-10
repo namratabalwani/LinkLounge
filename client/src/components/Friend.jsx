@@ -10,35 +10,37 @@ import { useNavigate } from "react-router-dom";
 import { setFriends } from "../state";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
+import { SERVER_URL } from "../constants.ts";
 
-const Friend = ({ friendId, name , subtitle, userPicturePath}) => {   
+const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { _id } = useSelector((state) => state.user);
     const token = useSelector((state) => state.token);
     const friends = useSelector((state) => state.friends);
+    const { palette, pallete } = useTheme();
 
-    const palette = useTheme();
     const primaryLight = palette.primary.light;
     const primaryDark = palette.primary.dark;
-    const main = palette.neutral.main;
-    const medium = palette.neutral.medium;
+    const main = pallete.neutral.main;
+    const medium = pallete.neutral.medium;
+
 
     const isFriend = friends.find((friend) => friend._id === friendId);
 
-    const patchFriend = async() => {
-        const response = await fetch(`http://localhost:3001/users/${_id}/${friendId}`,
-        {
-            method: "PATCH",
-            headers: {
-                Authorization : `Bearer ${token}`,
-                "Content-Type" : "application/json",
-            },
-        });
+    const patchFriend = async () => {
+        const response = await fetch(`${SERVER_URL}/users/${_id}/${friendId}`,
+            {
+                method: "PATCH",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
         const data = await response.json();
-        dispatch(setFriends({friends : data}));
+        dispatch(setFriends({ friends: data }));
     };
-    
+
     return (
         <FlexBetween>
             <FlexBetween gap={"1rem"}>
@@ -49,11 +51,11 @@ const Friend = ({ friendId, name , subtitle, userPicturePath}) => {
                         navigate(0);
                     }}
                 >
-                    <Typography color={main} 
+                    <Typography color={main}
                         variant="h5"
                         fontWeight={"500"}
-                        sx = {{
-                            "&:hover" : {
+                        sx={{
+                            "&:hover": {
                                 color: palette.primary.light,
                                 cursor: "pointer"
                             }
@@ -64,19 +66,19 @@ const Friend = ({ friendId, name , subtitle, userPicturePath}) => {
                     <Typography
                         color={medium}
                         fontSize={"0.75rem"}
-                    > {subtitle} </Typography> 
+                    > {subtitle} </Typography>
                 </Box>
             </FlexBetween>
             <IconButton
                 onClick={() => patchFriend()}
-                sx ={{backgroundColor : primaryLight, p: "0.6rem"}}
+                sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
             >
                 {isFriend ? (
-                    <PersonRemoveOutlined sx={{ color : primaryDark}}></PersonRemoveOutlined>
-                ): (<PersonAddOutlined sx={{ color : primaryDark}}> </PersonAddOutlined>)}
+                    <PersonRemoveOutlined sx={{ color: primaryDark }}></PersonRemoveOutlined>
+                ) : (<PersonAddOutlined sx={{ color: primaryDark }}> </PersonAddOutlined>)}
             </IconButton>
         </FlexBetween>
-        
+
     )
 }
 export default Friend;

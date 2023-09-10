@@ -2,75 +2,52 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "../../state";
 import PostWidget from "./PostWidget";
+import { SERVER_URL } from "../../constants.ts";
 
-const PostsWidget = ({ userId, isProfile = false }) => {
+const PostsWidget = ({ isProfile = false }) => {
+
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
+  const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
 
-  console.log("HERE 1 :" , userId, isProfile);
-
   const getPosts = async () => {
-    console.log("In PostsWidget:getPosts");
-    const response = await fetch("http://localhost:3001/posts", {
+    const response = await fetch(`${SERVER_URL}/posts`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
-    
-    const data = await response.json();
-    
-    dispatch(setPosts({ posts: data }));
-  };
 
- 
+    const data = await response.json();
+    dispatch(setPosts({ posts: data.post }));
+  };
 
   const getUserPosts = async () => {
     const response = await fetch(
-      `http://localhost:3001/posts/${userId}/posts`,
+      `${SERVER_URL}/posts/${_id}/posts`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       }
     );
     const data = await response.json();
-    console.log("HERE 3 :" , data);
-    dispatch(setPosts({ posts: data }));
+    dispatch(setPosts({ posts: data.post }));
   };
 
   useEffect(() => {
     if (isProfile) {
       getUserPosts();
-    } else {  
+    } else {
       getPosts();
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
       {posts.map(
-        ({
-          _id,
-          userId,
-          firstName,
-          lastName,
-          description,
-          location,
-          picturePath,
-          userPicturePath,
-          likes,
-          comments,
-        }) => (
+        post => (
           <PostWidget
-            key={_id}
-            postId={_id}
-            postUserId={userId}
-            name={`${firstName} ${lastName}`}
-            description={description}
-            location={location}
-            picturePath={picturePath}
-            userPicturePath={userPicturePath}
-            likes={likes}
-            comments={comments}
+            key={post._id}
+            post={post}
           />
         )
       )}
